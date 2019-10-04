@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Registrar extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class _RegistrarState extends State<Registrar> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  TextEditingController userNome = TextEditingController();
   TextEditingController userEmail = TextEditingController();
   TextEditingController userSenha = TextEditingController();
 
@@ -30,9 +32,22 @@ class _RegistrarState extends State<Registrar> {
                 SizedBox(height: 10,),
                 Icon(Icons.lock_open,size: 60, color: Colors.blue,),
                 TextFormField(
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     icon: Icon(Icons.person_outline,color: Colors.blue,),
+                    labelText: "Nome",),
+                  textAlign: TextAlign.left,
+                  controller: userNome,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Informe o Nome !";
+                    }
+                  },
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.email,color: Colors.blue,),
                     labelText: "E-Mail",),
                   textAlign: TextAlign.left,
                   controller: userEmail,
@@ -61,7 +76,7 @@ class _RegistrarState extends State<Registrar> {
                 RaisedButton(
                   color: Colors.blue,
                   textColor: Colors.white,
-                  child: Text("Logar"),
+                  child: Text("Registrar"),
                   onPressed: () {
                     if (_formKey.currentState.validate()){
                       registrar();
@@ -80,6 +95,12 @@ class _RegistrarState extends State<Registrar> {
           .createUserWithEmailAndPassword(
           email: userEmail.text, password: userSenha.text);
       usuario.sendEmailVerification();
+
+      Firestore.instance.collection("usuarios").document(usuario.uid).setData(
+          {
+            "nomeUsuario": userNome.text,
+          }
+      );
       Navigator.pop(context);
 
     } catch (erro) {
