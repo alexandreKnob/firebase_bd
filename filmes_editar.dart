@@ -110,18 +110,12 @@ class _FilmesEditarState extends State<FilmesEditar> {
                             child: DropdownButton(
                               isExpanded: true,
                               items: generoItens,
+                              value: generoSelecionado,
                               onChanged: (currencyValue) {
-
                                 setState(() {
                                   generoSelecionado = currencyValue;
                                 });
                               },
-                              value: generoSelecionado,
-
-                              // hint: new Text(
-                              // "Choose Currency Type",
-                              // style: TextStyle(color: Color(0xff11b719)),
-                              //),
                             ),
                           ),
                         ],

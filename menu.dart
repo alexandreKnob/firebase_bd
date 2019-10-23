@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_bd/usuarios.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'filmes.dart';
@@ -58,6 +59,17 @@ class _MenuState extends State<Menu>  {
                   //  context,
                   // MaterialPageRoute(builder: (context) => Filmes()),
                   //);
+                },
+              ),
+              RaisedButton(
+                color: Colors.blueAccent,
+                textColor: Colors.white,
+                child: Text("Busca Usuário"),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                   MaterialPageRoute(builder: (context) => Usuarios()),
+                  );
                 },
               ),
             ],
