@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class FilmesEditar extends StatefulWidget {
 
@@ -17,6 +21,10 @@ class _FilmesEditarState extends State<FilmesEditar> {
   //var selectedCurrency = "DA114yb1S5LHkA9uFliu";
   String generoSelecionado;
 
+  File _image;
+  String caminhoImagem="";
+
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,6 +40,7 @@ class _FilmesEditarState extends State<FilmesEditar> {
       nomeFilme.text =   widget.dadosProduto.data["nomeFilme"].toString();
       precoFilme.text =   widget.dadosProduto.data["precoFilme"].toString();
       generoSelecionado =   widget.dadosProduto.data["idGenero"].toString();
+      caminhoImagem =   widget.dadosProduto.data["urlImagem"].toString();
 
     }
 
@@ -122,6 +131,32 @@ class _FilmesEditarState extends State<FilmesEditar> {
                       );
                     }
                   }),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundColor: Color(0xff476cfb),
+                      child: ClipOval(
+                        child: new SizedBox(width: 180.0,height: 180.0,
+                            child: (caminhoImagem.isNotEmpty)?Image.network(caminhoImagem,fit: BoxFit.fill,): Image.asset("imagens/semImagem.jpg")
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 60.0),
+                    child: IconButton(icon: Icon(Icons.camera,size: 30.0,),
+                      onPressed: () {
+                        getImage();
+                      },
+                    ),
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -144,7 +179,8 @@ class _FilmesEditarState extends State<FilmesEditar> {
                                     {
                                       "nomeFilme": nomeFilme.text.toUpperCase(),
                                       "precoFilme": precoFilme.text,
-                                      "idGenero": generoSelecionado
+                                      "idGenero": generoSelecionado,
+                                      "urlImagem": caminhoImagem
                                     }
                                 );
                               } else {
@@ -153,7 +189,8 @@ class _FilmesEditarState extends State<FilmesEditar> {
                                     .updateData({
                                   "nomeFilme": nomeFilme.text.toUpperCase(),
                                   "precoFilme": precoFilme.text,
-                                  "idGenero": generoSelecionado
+                                  "idGenero": generoSelecionado,
+                                  "urlImagem": caminhoImagem
                                 });
                               }
                               Navigator.pop(context);
@@ -173,6 +210,7 @@ class _FilmesEditarState extends State<FilmesEditar> {
                         child: Text("Cancelar",textAlign: TextAlign.center, style: TextStyle(color: Colors.white),)
                     ),
                   ),
+
                 ],
               ),
             ],
@@ -180,6 +218,23 @@ class _FilmesEditarState extends State<FilmesEditar> {
         ),
       ),
     );
+  }
+
+
+  Future getImage() async {
+
+      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      _image = image;
+
+      String fileName = basename(_image.path);
+      StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+      StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+      caminhoImagem = (await taskSnapshot.ref.getDownloadURL());
+
+      setState(() {
+      });
+
   }
 
 

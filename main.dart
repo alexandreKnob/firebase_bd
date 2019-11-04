@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'filmes.dart';
+import 'imagem.dart';
 import 'menu.dart';
 import 'registrar.dart';
 import 'esqueci.dart';
@@ -120,6 +122,26 @@ class _HomeState extends State<Home> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Registrar()),
+                        );
+                      },
+                    ),
+                    FlatButton(
+                      textColor: Colors.blue,
+                      child: Text( "Imagem",textAlign: TextAlign.right,),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Imagem()),
+                        );
+                      },
+                    ),
+                    FlatButton(
+                      textColor: Colors.blue,
+                      child: Text( "Filmes",textAlign: TextAlign.right,),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Filmes()),
                         );
                       },
                     ),

@@ -62,6 +62,11 @@ class _FilmesState extends State<Filmes> {
                             return Card( // Lista os produtos
                                 child: ListTile(
                                   //snapshot.data.documents[index].documentID.toString() - pega o ID
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(snapshot.data.documents[index].data["urlImagem"]
+
+                                    ),
+                                  ),
                                   title: Text(snapshot.data.documents[index].data["nomeFilme"], style: TextStyle(fontSize: 25)),
                                   subtitle: Text("R\$ "  + snapshot.data.documents[index].data["precoFilme"].toString(),style: TextStyle(fontSize: 20)),
                                   trailing: Row(
